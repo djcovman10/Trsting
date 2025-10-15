@@ -1,0 +1,9 @@
+DeviceTvmSecureConfigurationAssessment
+| where ConfigurationId startswith "asr_"
+| summarize
+    HasAudit = any(ConfigurationValue == "Audit"),
+    HasBlock = any(ConfigurationValue == "Block")
+  by DeviceId, DeviceName
+| where HasAudit == false and HasBlock == false
+| join kind=leftouter DeviceInfo on DeviceId
+| project DeviceName, OSPlatform, LoggedOnUsers, LastSeen
