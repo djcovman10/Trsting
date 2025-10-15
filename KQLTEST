@@ -1,0 +1,8 @@
+// ASR Rules in Audit mode with hit counts
+DeviceEvents
+| where ActionType == "Audit"  // Filter audit mode actions
+| where AdditionalFields has "AttackSurfaceReduction"  // Filter ASR-related events
+| summarize Hits = count(), 
+            DistinctDevices = dcount(DeviceId) 
+          by RuleName = tostring(AdditionalFields["RuleName"])
+| order by Hits asc
